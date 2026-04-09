@@ -12,4 +12,12 @@ public sealed class CarTests
         
         Assert.IsNotNull(car);
     }
+
+    [TestMethod]
+    public void ShouldCreateCarWithDoors()
+    {
+        Car car = new Car(5);
+        
+        Assert.AreEqual(car.Doors, 5);
+    }
 }
