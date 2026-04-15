@@ -68,20 +68,16 @@ jobs:
           fail-on-empty: true
           only-summary: false
 
-      - name: Generate Test Coverage
-        run: dotnet test ./Automotive/Automotive.sln --configuration Release --no-build --verbosity normal --collect:"XPlat Code Coverage" --results-directory ./coverage --settings .runsettings
+      - name: Install dotnet-coverage
+        run: dotnet tool install --global dotnet-coverage
 
-      - name: Join Coverage Reports
-        uses: danielpalme/ReportGenerator-GitHub-Action@5.3.9
-        with:
-          reports: coverage/**/coverage.cobertura.xml
-          targetdir: coverage
-          reporttypes: 'Cobertura'
+      - name: Generate Test Coverage
+        run: dotnet-coverage collect "dotnet test ./Automotive/Automotive.sln --configuration Release --no-build --verbosity normal --settings .runsettings" -f cobertura -o ./coverage/coverage.cobertura.xml
 
       - name: Code Coverage Report
         uses: irongut/CodeCoverageSummary@v1.3.0
         with:
-          filename: coverage/*.xml
+          filename: coverage/coverage.cobertura.xml
           badge: true
           fail_below_min: false
           format: markdown
